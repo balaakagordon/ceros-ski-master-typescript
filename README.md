@@ -19,6 +19,7 @@ npm run dev
 to resume skiing.
 * At some point the rhino will appear, chasing the skier. It will inevitably catch the skier and eat them, ending the
 game.
+* Use the space bar or a ramp to jump over obstacles like rocks. Please note: you cannot jump over trees.
 
 **Time Limit**
 
