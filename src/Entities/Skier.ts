@@ -20,7 +20,6 @@ const STARTING_SPEED: number = 10;
 /**
  * The different states the skier can be in.
  */
-
 enum STATES {
     STATE_SKIING = 'skiing',
     STATE_JUMPING = 'jumping',

@@ -2,7 +2,7 @@
  * The main game class. This initializes the game as well as runs the game/render loop and initial handling of input.
  */
 
-import { GAME_CANVAS, GAME_WIDTH, GAME_HEIGHT, IMAGES } from "../Constants";
+import { GAME_CANVAS, GAME_WIDTH, GAME_HEIGHT, IMAGES, KEYS } from "../Constants";
 import { Canvas } from './Canvas';
 import { ImageManager } from "./ImageManager";
 import { Position, Rect } from './Utils';
@@ -10,11 +10,24 @@ import { ObstacleManager } from "../Entities/Obstacles/ObstacleManager";
 import { Rhino } from "../Entities/Rhino";
 import { Skier} from "../Entities/Skier";
 
+/**
+ * The different states the game can be in.
+ */
+enum STATES {
+    STATE_PLAYING = 'playing',
+    STATE_PAUSED = 'paused'
+};
+
 export class Game {
     /**
      * The canvas the game will be displayed on
      */
     private canvas!: Canvas;
+
+    /**
+     * What state the game is currently in.
+     */
+    private state: STATES = STATES.STATE_PLAYING;
 
     /**
      * Coordinates denoting the active rectangular space in the game world
@@ -64,10 +77,63 @@ export class Game {
     }
 
     /**
+     * Is the game currently in the playing state
+     */
+    isPlaying(): boolean {
+        return this.state === STATES.STATE_PLAYING;
+    }
+
+    /**
+     * Is the game currently in the paused state
+     */
+    isPaused(): boolean {
+        return this.state === STATES.STATE_PAUSED;
+    }
+
+    /**
+     * If the game is currently playing then put it in the paused state. And if it is currently paused then put it in the playing state.
+     */
+    pauseOrResume() {
+        if(this.isPlaying()) {
+            this.state = STATES.STATE_PAUSED;
+        } else if(this.isPaused()) {
+            this.state = STATES.STATE_PLAYING;
+            this.run();
+        }
+    }
+
+    /**
+     * Reset the game
+     */
+    reset() {
+        location.reload();
+    }
+
+    /**
      * Setup listeners for any input events we might need.
      */
     setupInputHandling() {
         document.addEventListener('keydown', this.handleKeyDown.bind(this));
+    }
+
+    /**
+     * Handle keyboard input for game controls.
+     */
+    handleInput(inputKey: string) {
+        let handled: boolean = true;
+
+        switch(inputKey) {
+            case KEYS.PAUSE:
+                this.pauseOrResume();
+                break;
+            case KEYS.RESET:
+                this.reset();
+                break;
+            default:
+                handled = false;
+        }
+
+        return handled;
     }
 
     /**
@@ -79,15 +145,18 @@ export class Game {
     }
 
     /**
-     * The main game loop. Clear the screen, update the game objects and then draw them.
+     * The main game loop. If the game is in the playing state then clear the screen, update the game objects and then draw them.
+     * If the game is in the paused state, do nothing.
      */
     run() {
-        this.canvas.clearCanvas();
-
-        this.updateGameWindow();
-        this.drawGameWindow();
-
-        requestAnimationFrame(this.run.bind(this));
+        if (this.isPlaying()) {
+            this.canvas.clearCanvas();
+    
+            this.updateGameWindow();
+            this.drawGameWindow();
+    
+            requestAnimationFrame(this.run.bind(this));
+        }
     }
 
     /**
@@ -133,9 +202,10 @@ export class Game {
      * Handle keypresses and delegate to any game objects that might have key handling of their own.
      */
     handleKeyDown(event: KeyboardEvent) {
-        let handled: boolean = this.skier.handleInput(event.key);
+        const handledByGame: boolean = this.handleInput(event.key);
+        const handledBySkier: boolean = this.isPlaying() && this.skier.handleInput(event.key);
 
-        if(handled) {
+        if(handledByGame || handledBySkier) {
             event.preventDefault();
         }
     }
