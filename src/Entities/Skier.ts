@@ -3,7 +3,12 @@
  * angles, and crashes into obstacles they run into. If caught by the rhino, the skier will get eaten and die.
  */
 
-import { IMAGE_NAMES, DIAGONAL_SPEED_REDUCER, KEYS } from "../Constants";
+import { 
+    IMAGE_NAMES,
+    DIAGONAL_SPEED_REDUCER,
+    KEYS,
+    DIFFICULTY_INCREASE_THRESHOLD
+} from "../Constants";
 import { Entity } from "./Entity";
 import { Animation } from "../Core/Animation";
 import { Canvas } from "../Core/Canvas";
@@ -15,7 +20,7 @@ import {Obstacle} from "./Obstacles/Obstacle";
 /**
  * The skier starts running at this speed. Saved in case speed needs to be reset at any point.
  */
-const STARTING_SPEED: number = 10;
+const STARTING_SPEED: number = 3;
 
 /**
  * The different states the skier can be in.
@@ -133,13 +138,36 @@ export class Skier extends Entity {
     }
 
     /**
+     * Is the skier facing down the hill
+     */
+    isDownwardsFacing(): boolean {
+        switch(this.direction) {
+            case DIRECTION_DOWN:
+                return true;
+            case DIRECTION_LEFT_DOWN:
+                return true;
+            case DIRECTION_RIGHT_DOWN:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Is the skier moving down the hill
+     */
+    isMovingDownwards(): boolean {
+        return this.isDownwardsFacing() && this.speed > 0;
+    }
+
+    /**
      * Create and store the skier's animations.
      */
     setupAnimations(): void {
         this.animations[STATES.STATE_JUMPING] = new Animation(
             IMAGES_JUMPING,
             false,
-            () => this.landFromJump()
+            () => this.landFromJump(this.speed)
         );
     }
 
@@ -159,9 +187,9 @@ export class Skier extends Entity {
     }
 
     /**
-     * Move the skier and check to see if they've hit an obstacle. The skier only moves in the skiing and jumping states.
+     * Move the skier and check to see if they've hit an obstacle. The skier only moves in the skiing and jumping states. Increase the skier speed at steady intervals
      */
-    update(gameTime: number) {
+    update(gameTime: number, currentScore: number) {
         if(this.isSkiing()) {
             this.move();
             this.checkIfHitObstacle();
@@ -171,6 +199,17 @@ export class Skier extends Entity {
             this.move();
             this.animate(gameTime);
             this.checkIfHitObstacle();
+        }
+
+        this.increaseSpeedIfThresholdMet(currentScore);
+    }
+
+    /**
+     * Increase the skier speed at intervals set by the DIFFICULTY_INCREASE_THRESHOLD constant, if the skier doesn't crash or stop
+     */
+     increaseSpeedIfThresholdMet(currentScore: number) {
+        if(currentScore % DIFFICULTY_INCREASE_THRESHOLD === 0) {
+            this.speed++;
         }
     }
 
@@ -468,11 +507,11 @@ export class Skier extends Entity {
     }
 
     /**
-     * Change the skier back to the skiing state, get them moving again at the starting speed.
+     * Change the skier back to the skiing state, get them moving again at the speed they had before the jump.
      */
-    landFromJump() {
+    landFromJump(currentSpeed: number) {
         this.state = STATES.STATE_SKIING;
-        this.speed = STARTING_SPEED;
+        this.speed = currentSpeed;
     }
 
     /**

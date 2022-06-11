@@ -18,6 +18,14 @@ enum STATES {
     STATE_PAUSED = 'paused'
 };
 
+/**
+ * The coordinate values of the game's metadata.
+ */
+const GAME_METADATA_X: number = 30;
+const RESET_TEXT_Y: number = 70;
+const PAUSE_TEXT_Y: number = 100;
+const SCORE_TEXT_Y: number = 130;
+
 export class Game {
     /**
      * The canvas the game will be displayed on
@@ -28,6 +36,19 @@ export class Game {
      * What state the game is currently in.
      */
     private state: STATES = STATES.STATE_PLAYING;
+
+    /**
+     * The current score of the player.
+     */
+    private currentScore: number = 0;
+
+    /**
+     * The coordinates of the metadata which contains the game score and the pause and reset instructions.
+     */
+    private gameMetaDataX: number = GAME_METADATA_X;
+    private resetTextY: number = RESET_TEXT_Y;
+    private pauseTextY: number = PAUSE_TEXT_Y;
+    private scoreTextY: number = SCORE_TEXT_Y;
 
     /**
      * Coordinates denoting the active rectangular space in the game world
@@ -145,17 +166,27 @@ export class Game {
     }
 
     /**
-     * The main game loop. If the game is in the playing state then clear the screen, update the game objects and then draw them.
-     * If the game is in the paused state, do nothing.
+     * The main game loop. If the game is in the playing state then clear the screen, update the game objects and current score, and then draw them.
+     * If the game is not in the playing state, do nothing.
      */
     run() {
         if (this.isPlaying()) {
             this.canvas.clearCanvas();
     
             this.updateGameWindow();
+            this.updateCurrentScore();
             this.drawGameWindow();
     
             requestAnimationFrame(this.run.bind(this));
+        }
+    }
+
+    /**
+     * Update the current score if the skier is moving downwards.
+     */
+    updateCurrentScore() {
+        if(this.skier.isMovingDownwards()) {
+            this.currentScore++;
         }
     }
 
@@ -170,8 +201,8 @@ export class Game {
 
         this.obstacleManager.placeNewObstacle(this.gameWindow, previousGameWindow);
 
-        this.skier.update(this.gameTime);
-        this.rhino.update(this.gameTime, this.skier);
+        this.skier.update(this.gameTime, this.currentScore);
+        this.rhino.update(this.gameTime, this.currentScore, this.skier);
     }
 
     /**
@@ -180,10 +211,21 @@ export class Game {
      */
     drawGameWindow() {
         this.canvas.setDrawOffset(this.gameWindow.left, this.gameWindow.top);
+        this.drawGameMetadata();
 
         this.skier.draw();
         this.rhino.draw();
         this.obstacleManager.drawObstacles();
+    }
+
+    /**
+     * Draw the game's metadata which includes instructions for the player to pause or reset the game, as well as the current game score.
+     */
+    drawGameMetadata() {
+        this.canvas.ctx.font = 'bold 24px monospace';
+        this.canvas.ctx.fillText(`Press ${KEYS.RESET} to reset`, this.gameMetaDataX, this.resetTextY);
+        this.canvas.ctx.fillText(`Press ${KEYS.PAUSE} to pause`, this.gameMetaDataX, this.pauseTextY);
+        this.canvas.ctx.fillText("Score: " + this.currentScore, this.gameMetaDataX, this.scoreTextY);
     }
 
     /**

@@ -3,6 +3,7 @@ import { iImage } from "./Interfaces/iImage";
 export const GAME_CANVAS = 'skiCanvas';
 export const GAME_WIDTH = window.innerWidth;
 export const GAME_HEIGHT = window.innerHeight;
+export const DIFFICULTY_INCREASE_THRESHOLD = 500;
 
 export enum KEYS {
     LEFT = "ArrowLeft",

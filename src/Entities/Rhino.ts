@@ -3,7 +3,7 @@
  * different animations that it cycles between depending upon the rhino's state.
  */
 
-import { IMAGE_NAMES } from "../Constants";
+import { IMAGE_NAMES, DIFFICULTY_INCREASE_THRESHOLD } from "../Constants";
 import { Entity } from "./Entity";
 import { Animation } from "../Core/Animation";
 import { Canvas } from "../Core/Canvas";
@@ -13,7 +13,7 @@ import { intersectTwoRects, getDirectionVector } from "../Core/Utils";
 /**
  * The rhino starts running at this speed. Saved in case speed needs to be reset at any point.
  */
-const STARTING_SPEED: number = 10.5;
+const STARTING_SPEED: number = 3.5;
 
 /**
  * The different states the rhino can be in.
@@ -106,15 +106,25 @@ export class Rhino extends Entity {
 
     /**
      * Update the rhino by moving it, seeing if it caught its target and then update the animation if needed. Currently
-     * it only moves if it's running.
+     * it only moves if it's running. Increase the rhino speed at steady intervals.
      */
-    update(gameTime: number, target: Entity) {
+    update(gameTime: number, currentScore: number, target: Entity) {
         if(this.isRunning()) {
             this.move(target);
             this.checkIfCaughtTarget(target);
         }
 
         this.animate(gameTime);
+        this.increaseSpeedIfThresholdMet(currentScore);
+    }
+
+    /**
+     * Increase the rhino speed at intervals set by the DIFFICULTY_INCREASE_THRESHOLD constant
+     */
+    increaseSpeedIfThresholdMet(currentScore: number) {
+        if(currentScore % DIFFICULTY_INCREASE_THRESHOLD === 0) {
+            this.speed++;
+        }
     }
 
     /**
