@@ -167,7 +167,7 @@ export class Game {
 
     /**
      * The main game loop. If the game is in the playing state then clear the screen, update the game objects and current score, and then draw them.
-     * If the game is not in the playing state, do nothing.
+     * If the game is in the paused state then draw the pause icon.
      */
     run() {
         if (this.isPlaying()) {
@@ -178,6 +178,10 @@ export class Game {
             this.drawGameWindow();
     
             requestAnimationFrame(this.run.bind(this));
+        }
+
+        if(this.isPaused()) {
+            this.drawPauseIcon();
         }
     }
 
@@ -226,6 +230,21 @@ export class Game {
         this.canvas.ctx.fillText(`Press ${KEYS.RESET} to reset`, this.gameMetaDataX, this.resetTextY);
         this.canvas.ctx.fillText(`Press ${KEYS.PAUSE} to pause`, this.gameMetaDataX, this.pauseTextY);
         this.canvas.ctx.fillText("Score: " + this.currentScore, this.gameMetaDataX, this.scoreTextY);
+    }
+
+    /**
+     * Draw the pause icon. It is slightly offset from the center so that it does not block view of the skier.
+     */
+    drawPauseIcon() {
+        const pauseIconOffset = 30;
+        const pauseIconWidth = 40;
+        const pauseIconHeight = 80;
+        const x1 = (GAME_WIDTH / 2) - pauseIconOffset;
+        const x2 = (GAME_WIDTH / 2) + pauseIconOffset;
+        const y = (GAME_HEIGHT / 2) + pauseIconOffset;
+        this.canvas.ctx.lineWidth = 10;
+        this.canvas.ctx.fillRect(x1, y, pauseIconWidth, pauseIconHeight);
+        this.canvas.ctx.fillRect(x2, y, pauseIconWidth, pauseIconHeight);
     }
 
     /**
