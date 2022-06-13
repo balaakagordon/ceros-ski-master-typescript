@@ -511,6 +511,7 @@ export class Skier extends Entity {
      */
     landFromJump(currentSpeed: number) {
         this.state = STATES.STATE_SKIING;
+        this.imageName = DIRECTION_IMAGES[this.direction];
         this.speed = currentSpeed;
     }
 

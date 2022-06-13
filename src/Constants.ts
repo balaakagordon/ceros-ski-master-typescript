@@ -3,8 +3,8 @@ import { iImage } from "./Interfaces/iImage";
 export const GAME_CANVAS = 'skiCanvas';
 export const GAME_WIDTH = window.innerWidth;
 export const GAME_HEIGHT = window.innerHeight;
-export const SPEED_INCREASE_THRESHOLD = 500;
-export const OBSTACLE_FREQUENCY_INCREASE_THRESHOLD = 1000;
+export const SPEED_INCREASE_THRESHOLD = 300;
+export const OBSTACLE_FREQUENCY_INCREASE_THRESHOLD = 400;
 
 export enum KEYS {
     LEFT = "ArrowLeft",
