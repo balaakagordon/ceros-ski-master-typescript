@@ -20,7 +20,7 @@ import {Obstacle} from "./Obstacles/Obstacle";
 /**
  * The skier starts running at this speed. Saved in case speed needs to be reset at any point.
  */
-const STARTING_SPEED: number = 3;
+const STARTING_SPEED: number = 5;
 
 /**
  * The different states the skier can be in.
