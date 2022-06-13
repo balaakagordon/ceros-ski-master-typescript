@@ -7,7 +7,7 @@ import {
     IMAGE_NAMES,
     DIAGONAL_SPEED_REDUCER,
     KEYS,
-    DIFFICULTY_INCREASE_THRESHOLD
+    SPEED_INCREASE_THRESHOLD
 } from "../Constants";
 import { Entity } from "./Entity";
 import { Animation } from "../Core/Animation";
@@ -205,10 +205,10 @@ export class Skier extends Entity {
     }
 
     /**
-     * Increase the skier speed at intervals set by the DIFFICULTY_INCREASE_THRESHOLD constant, if the skier doesn't crash or stop
+     * Increase the skier speed at intervals set by the SPEED_INCREASE_THRESHOLD constant, if the skier doesn't crash or stop
      */
      increaseSpeedIfThresholdMet(currentScore: number) {
-        if(currentScore % DIFFICULTY_INCREASE_THRESHOLD === 0) {
+        if(currentScore % SPEED_INCREASE_THRESHOLD === 0) {
             this.speed++;
         }
     }

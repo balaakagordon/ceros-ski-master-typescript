@@ -3,7 +3,7 @@
  * different animations that it cycles between depending upon the rhino's state.
  */
 
-import { IMAGE_NAMES, DIFFICULTY_INCREASE_THRESHOLD } from "../Constants";
+import { IMAGE_NAMES, SPEED_INCREASE_THRESHOLD } from "../Constants";
 import { Entity } from "./Entity";
 import { Animation } from "../Core/Animation";
 import { Canvas } from "../Core/Canvas";
@@ -119,10 +119,10 @@ export class Rhino extends Entity {
     }
 
     /**
-     * Increase the rhino speed at intervals set by the DIFFICULTY_INCREASE_THRESHOLD constant
+     * Increase the rhino speed at intervals set by the SPEED_INCREASE_THRESHOLD constant
      */
     increaseSpeedIfThresholdMet(currentScore: number) {
-        if(currentScore % DIFFICULTY_INCREASE_THRESHOLD === 0) {
+        if(currentScore % SPEED_INCREASE_THRESHOLD === 0) {
             this.speed++;
         }
     }

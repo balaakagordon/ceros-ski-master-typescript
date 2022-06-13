@@ -2,7 +2,14 @@
  * The main game class. This initializes the game as well as runs the game/render loop and initial handling of input.
  */
 
-import { GAME_CANVAS, GAME_WIDTH, GAME_HEIGHT, IMAGES, KEYS } from "../Constants";
+import {
+    GAME_CANVAS,
+    GAME_WIDTH,
+    GAME_HEIGHT,
+    IMAGES,
+    KEYS,
+    OBSTACLE_FREQUENCY_INCREASE_THRESHOLD
+} from "../Constants";
 import { Canvas } from './Canvas';
 import { ImageManager } from "./ImageManager";
 import { Position, Rect } from './Utils';
@@ -19,7 +26,7 @@ enum STATES {
 };
 
 /**
- * The coordinate values of the game's metadata.
+ * The screen coordinates of the metadata which contains the game score and the pause and reset instructions.
  */
 const GAME_METADATA_X: number = 30;
 const RESET_TEXT_Y: number = 70;
@@ -41,14 +48,6 @@ export class Game {
      * The current score of the player.
      */
     private currentScore: number = 0;
-
-    /**
-     * The coordinates of the metadata which contains the game score and the pause and reset instructions.
-     */
-    private gameMetaDataX: number = GAME_METADATA_X;
-    private resetTextY: number = RESET_TEXT_Y;
-    private pauseTextY: number = PAUSE_TEXT_Y;
-    private scoreTextY: number = SCORE_TEXT_Y;
 
     /**
      * Coordinates denoting the active rectangular space in the game world
@@ -203,6 +202,11 @@ export class Game {
         const previousGameWindow: Rect = this.gameWindow;
         this.calculateGameWindow();
 
+        // Progressively increase the obstacle frequency, as the player's score increases
+        if(this.currentScore % OBSTACLE_FREQUENCY_INCREASE_THRESHOLD === 0) {
+            this.obstacleManager.increaseObstaclePlacementChance();
+        }
+
         this.obstacleManager.placeNewObstacle(this.gameWindow, previousGameWindow);
 
         this.skier.update(this.gameTime, this.currentScore);
@@ -227,9 +231,9 @@ export class Game {
      */
     drawGameMetadata() {
         this.canvas.ctx.font = 'bold 24px monospace';
-        this.canvas.ctx.fillText(`Press ${KEYS.RESET} to reset`, this.gameMetaDataX, this.resetTextY);
-        this.canvas.ctx.fillText(`Press ${KEYS.PAUSE} to pause`, this.gameMetaDataX, this.pauseTextY);
-        this.canvas.ctx.fillText("Score: " + this.currentScore, this.gameMetaDataX, this.scoreTextY);
+        this.canvas.ctx.fillText(`Press ${KEYS.RESET} to reset`, GAME_METADATA_X, RESET_TEXT_Y);
+        this.canvas.ctx.fillText(`Press ${KEYS.PAUSE} to pause`, GAME_METADATA_X, PAUSE_TEXT_Y);
+        this.canvas.ctx.fillText("Score: " + this.currentScore, GAME_METADATA_X, SCORE_TEXT_Y);
     }
 
     /**

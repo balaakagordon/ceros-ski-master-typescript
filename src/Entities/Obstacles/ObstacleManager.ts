@@ -47,6 +47,11 @@ export class ObstacleManager {
     canvas: Canvas;
 
     /**
+     * Adjustable value representing the chance of placing a new obstacle as the skier moves.
+     */
+    newObstacleChance: number = NEW_OBSTACLE_CHANCE;
+
+    /**
      * Init the Obstacle Manager.
      */
     constructor(imageManager: ImageManager, canvas: Canvas) {
@@ -65,6 +70,12 @@ export class ObstacleManager {
         this.obstacles.forEach((obstacle: Obstacle) => {
             obstacle.draw();
         });
+    }
+
+    increaseObstaclePlacementChance() {
+        if(this.newObstacleChance > 1) {
+            this.newObstacleChance--;
+        }
     }
 
     /**
@@ -95,8 +106,8 @@ export class ObstacleManager {
      * it has moved in and try to place a new obstacle offscreen (so player doesn't see it pop in) in that direction(s).
      */
     placeNewObstacle(gameWindow: Rect, previousGameWindow: Rect) {
-        const shouldPlaceObstacle = randomInt(1, NEW_OBSTACLE_CHANCE);
-        if(shouldPlaceObstacle !== NEW_OBSTACLE_CHANCE) {
+        const shouldPlaceObstacle = randomInt(1, this.newObstacleChance);
+        if(shouldPlaceObstacle !== this.newObstacleChance) {
             return;
         }
 
