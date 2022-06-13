@@ -91,3 +91,32 @@ how creative candidates get with this.
 * Write unit tests for your code
 
 We are looking forward to see what you come up with!!
+
+---
+
+**Gordon's Changes**
+
+**New  Features**
+* Jump ramps added as a new obstacle. Ramps show up randomly, like all the other obstacles, however, the player's interaction with jump ramps is different to that with the other obstacles.
+* The ability for the player to jump over obstacles by either going over a ramp or using the spacebar to jump manually.
+* When the skier jumps, they perform a flip, based on the given animation images. Rocks can be jumped over, however, trees cannot be jumped and thus, they must be avoided using the directional controls.
+* The ability for the player to pause or reset the game.
+  * The player can pause using the `F` key.
+  * When the game is paused, a pause icon is shown on the screen and the skier and the rhino both remain stationary.
+  * The player can reset the game at any time using the `R` key.
+  * Pause and Reset keys were selected based on what I deemed to be the optimal comfort level for the player.
+* A score counter which keeps track of the player's score, as they progress down the ski slope. The score only increments when the skier is actively moving down the slope so they don't get any points when crashed or stopped.
+* The game difficulty increases progressively.
+  * The speed of the skier and the rhino increase as the game progresses, requiring the player to react faster to obstacles.
+  * The frequency of the obstacles also increases, as the score goes up, so that the player has to navigate a more congested screen.
+* This game is available at [this Heroku link](https://ceros-ski-master-gbalaaka.herokuapp.com/)
+
+
+**Other additions**
+
+NB: The following changes were not requested in the project specification. I added these as minor improvements, so that we can discuss them in the technical interview, however, in practice, I would have raised these as questions/suggestions, to the Product Manager, before beginning this task.
+* Since I made the jump ramp an obstacle, I set it as another jumpable obstacle so that when a player manually jumps right before a ramp, they do not interact with it.
+* When the skier jumps, I slightly magnified the image of the skier in order to give the game a 3D effect. This addition could be refined further, by setting varying magnification sizes for the images in the flip animation.
+* I removed the ability for the skier to turn or change direction when they are in the air. I figured that this would make the game a little more realistic and would push the player to be more intentional with their jumps, in order to avoid obstacles.
+* I added a pause icon to show clearly, when the game is paused.
+* I also turned down the initial speeds of the skier and rhino, to give the player a better chance to accumulate some points and get immersed in the game.
