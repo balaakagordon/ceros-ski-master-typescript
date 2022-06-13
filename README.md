@@ -94,7 +94,7 @@ We are looking forward to see what you come up with!!
 
 ---
 
-**Gordon's Changes**
+**New Changes**
 
 **New  Features**
 * Jump ramps added as a new obstacle. Ramps show up randomly, like all the other obstacles, however, the player's interaction with jump ramps is different to that with the other obstacles.
@@ -112,7 +112,7 @@ We are looking forward to see what you come up with!!
 * This game is available at [this Heroku link](https://ceros-ski-master-gbalaaka.herokuapp.com/)
 
 
-**Other additions**
+**Other Additions**
 
 NB: The following changes were not requested in the project specification. I added these as minor improvements, so that we can discuss them in the technical interview, however, in practice, I would have raised these as questions/suggestions, to the Product Manager, before beginning this task.
 * Since I made the jump ramp an obstacle, I set it as another jumpable obstacle so that when a player manually jumps right before a ramp, they do not interact with it.
